@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -46,6 +47,7 @@ dependencies {
 
   //DI
   implementation(libs.hilt)
+  implementation(libs.firebase.firestore.ktx)
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
@@ -71,4 +73,10 @@ dependencies {
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+
+  implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+  implementation("com.google.firebase:firebase-analytics")
+  implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
+
+  implementation ("androidx.compose.material:material-icons-extended:1.7.0")
 }

@@ -11,4 +11,10 @@ sealed class Screen(
   data object AddPost : Screen("addPost")
   
   data object Settings : Screen("settings")
+
+  data object Auth : Screen ("auth")
+
+  data object SignIn : Screen ("signin")
+
+  data object Management : Screen ("management")
 }

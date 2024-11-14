@@ -14,4 +14,9 @@
   <string name="contentDescription_more">Plus</string>
   <string name="contentDescription_notification_icon">Notification icon</string>
   <string name="error_title">Titre non valide</string>
+  <string name="sign_in">Se connecter avec une adresse e-mail</string>
+  <string name="sign_out">Déconnexion</string>
+  <string name="delete_account">Suppression du compte</string>
+  <string name="my_account">Mon compte</string>
+
 </resources>

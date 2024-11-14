@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 class PostFakeApi : PostApi {
   private val users = mutableListOf(
-    User("1", "Gerry", "Ariella"),
-    User("2", "Brenton", "Capri"),
-    User("3", "Wally", "Claud")
+    User("1", "Gerry", "Ariella", email = null, name = null),
+    User("2", "Brenton", "Capri", email = null, name = null),
+    User("3", "Wally", "Claud", email = null, name = null)
   )
   
   private val posts = MutableStateFlow(
