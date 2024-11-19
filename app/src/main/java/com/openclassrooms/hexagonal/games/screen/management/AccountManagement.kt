@@ -7,14 +7,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +43,8 @@ fun AccountManagement(
     viewModel: AccountManagementViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -57,10 +65,11 @@ fun AccountManagement(
             )
         }
     ) { contentPadding ->
-        MyAccount(
+        /**MyAccount(
             modifier = Modifier.padding(contentPadding),
             onDeleteButtonClicked = {
                 //TODO POPUP
+
                 CoroutineScope(Dispatchers.IO).launch {
                     async {
                         viewModel.deleteUser()
@@ -72,25 +81,47 @@ fun AccountManagement(
                 viewModel.logOut()
                 onBackClick()
             },
+        )*/
+
+        MyAccount(
+            modifier = Modifier.padding(contentPadding),
+            onDeleteButtonClicked = {
+                showDialog = true
+            },
+            onSignOutButtonClicked = {
+                viewModel.logOut()
+                onBackClick()
+            },
         )
+        if (showDialog) {
+            DeleteAlertDialog(
+                title = stringResource(R.string.title_alert_delete),
+                text = stringResource(R.string.text_alert_delete),
+                onDismiss = {
+                    showDialog = false
+                    onBackClick()
+                },
+                onConfirm = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        async {
+                            viewModel.deleteUser()
+                        }.await()
+                    }
+                    showDialog = false
+                    onBackClick()
+                }
+            )
+        }
     }
 }
 
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun MyAccount(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     onDeleteButtonClicked: () -> Unit,
     onSignOutButtonClicked: () -> Unit,
 ) {
-    val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(
-            android.Manifest.permission.POST_NOTIFICATIONS
-        )
-    } else {
-        null
-    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -99,12 +130,6 @@ private fun MyAccount(
     ) {
         Button(
             onClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (notificationsPermissionState?.status?.isGranted == false) {
-                        notificationsPermissionState.launchPermissionRequest()
-                    }
-                }
-
                 onSignOutButtonClicked()
             }
         ) {
@@ -118,3 +143,27 @@ private fun MyAccount(
     }
 }
 
+@Composable
+fun DeleteAlertDialog(title: String, text: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = text)
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(text = "Confirmer")
+                onConfirm
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = "Annuler")
+            }
+        }
+    )
+
+}

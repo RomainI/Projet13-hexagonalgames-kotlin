@@ -77,6 +77,10 @@ dependencies {
   implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
   implementation("com.google.firebase:firebase-analytics")
   implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
-
+  implementation (libs.firebase.messaging)
+  implementation(libs.firebase.firestore)
   implementation ("androidx.compose.material:material-icons-extended:1.7.0")
+
+  implementation(libs.firebase.ui.storage)
+  implementation(libs.firebase.ui.firestore)
 }

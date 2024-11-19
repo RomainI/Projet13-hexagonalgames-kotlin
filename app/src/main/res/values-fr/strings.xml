@@ -18,5 +18,8 @@
   <string name="sign_out">Déconnexion</string>
   <string name="delete_account">Suppression du compte</string>
   <string name="my_account">Mon compte</string>
+  <string name="title_alert_delete">Confirmation</string>
+  <string name="text_alert_delete">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
+
 
 </resources>
