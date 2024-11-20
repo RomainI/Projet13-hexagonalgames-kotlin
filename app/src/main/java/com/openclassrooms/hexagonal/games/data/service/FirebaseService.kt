@@ -1,10 +1,12 @@
 package com.openclassrooms.hexagonal.games.data.service
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.hexagonal.games.domain.model.User
 import javax.inject.Inject
 
@@ -49,6 +51,25 @@ class FirebaseService @Inject constructor() {
         }
     }
 
+    fun uploadImageToFirebase(
+        uri: Uri,
+        onSuccess: (String) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        val storageReference = FirebaseStorage.getInstance().reference
+        val fileName = "images/${System.currentTimeMillis()}.jpg"
+        val fileRef = storageReference.child(fileName)
+
+        fileRef.putFile(uri)
+            .addOnSuccessListener {
+                fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                    onSuccess(downloadUri.toString()) // Retourne l'URL de l'image téléchargée
+                }
+            }
+            .addOnFailureListener { exception ->
+                onError(exception) // Retourne l'erreur si l'upload échoue
+            }
+    }
 
     suspend fun deleteUser(): Boolean {
         val currentUser = auth.currentUser

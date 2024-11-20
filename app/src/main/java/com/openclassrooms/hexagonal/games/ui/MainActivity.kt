@@ -12,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.auth.AuthenticationScreen
-import com.openclassrooms.hexagonal.games.screen.auth.RegistrationScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.management.AccountManagement
 import com.openclassrooms.hexagonal.games.screen.management.AccountManagementViewModel

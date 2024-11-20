@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import com.openclassrooms.hexagonal.games.R
 
@@ -21,6 +22,14 @@ sealed class FormEvent {
    * @property description The new description of the form.
    */
   data class DescriptionChanged(val description: String) : FormEvent()
+
+
+  /**
+   * Event triggered when the Image of the form is changed.
+   *
+   * @property image The new image of the form.
+   */
+  data class ImageChanges(val image: Uri) : FormEvent()
   
 }
 

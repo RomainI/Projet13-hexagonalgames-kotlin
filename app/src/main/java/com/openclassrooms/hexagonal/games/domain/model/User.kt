@@ -23,8 +23,8 @@ data class User(
    */
   val lastname: String,
 
-  val name: String? = "$firstname $lastname",
+  //val name: String? = "$firstname $lastname",
 
-  val email: String?
+ // val email: String?
 
 ) : Serializable

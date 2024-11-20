@@ -2,7 +2,9 @@
 accompanistPermissions = "0.34.0"
 agp = "8.6.0"
 coilCompose = "2.6.0"
+firebaseBom = "33.6.0"
 firebaseUiAuth = "6.4.0"
+firebaseUiAuthVersion = "8.0.2"
 firebaseUiFirestore = "8.0.2"
 firebaseUiStorage = "8.0.2"
 hiltNavigationCompose = "1.2.0"
@@ -23,9 +25,12 @@ firebaseFirestoreKtx = "25.1.1"
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuth" }
+firebase-ui-auth-v802 = { module = "com.firebaseui:firebase-ui-auth", version.ref = "firebaseUiAuthVersion" }
 firebase-ui-firestore = { module = "com.firebaseui:firebase-ui-firestore", version.ref = "firebaseUiFirestore" }
 firebase-ui-storage = { module = "com.firebaseui:firebase-ui-storage", version.ref = "firebaseUiStorage" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }

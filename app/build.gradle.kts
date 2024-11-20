@@ -74,9 +74,9 @@ dependencies {
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
 
-  implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-  implementation("com.google.firebase:firebase-analytics")
-  implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
+  implementation(libs.firebase.bom)
+  implementation(libs.firebase.analytics)
+  implementation (libs.firebase.ui.auth.v802)
   implementation (libs.firebase.messaging)
   implementation(libs.firebase.firestore)
   implementation ("androidx.compose.material:material-icons-extended:1.7.0")

@@ -73,7 +73,6 @@ fun AuthenticationScreen(modifier: Modifier = Modifier,
             .build()
         authLauncher.launch(signInIntent)
 
-        //checkIfUserExists("romain@mail.com")
     }
 
 
@@ -102,9 +101,5 @@ fun AuthenticationScreen(modifier: Modifier = Modifier,
 }
 
 
-@Composable
-fun RegistrationScreen() {
-    //TODO
 
-}
 

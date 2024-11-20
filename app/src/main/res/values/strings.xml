@@ -20,5 +20,9 @@
   <string name="my_account">My account</string>
   <string name="title_alert_delete">Confirmation</string>
   <string name="text_alert_delete">Are you sure you want to delete your account?</string>
+  <string name="no_image">No image</string>
+  <string name="select_a_photo">Select a photo</string>
+
+
 
 </resources>
