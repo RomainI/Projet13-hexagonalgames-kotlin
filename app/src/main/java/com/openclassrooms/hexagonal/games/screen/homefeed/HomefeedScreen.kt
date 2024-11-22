@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
@@ -58,6 +59,7 @@ fun HomefeedScreen(
     onMyAccountClick:() -> Unit ={}
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
+    val navController = rememberNavController()
 
     Scaffold(
         modifier = modifier,

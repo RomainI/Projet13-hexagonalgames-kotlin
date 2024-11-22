@@ -79,7 +79,7 @@ dependencies {
   implementation (libs.firebase.ui.auth.v802)
   implementation (libs.firebase.messaging)
   implementation(libs.firebase.firestore)
-  implementation ("androidx.compose.material:material-icons-extended:1.7.0")
+  implementation ("androidx.compose.material:material-icons-extended:1.7.5")
 
   implementation(libs.firebase.ui.storage)
   implementation(libs.firebase.ui.firestore)

@@ -1,72 +1,18 @@
 package com.openclassrooms.hexagonal.games.data.service
 
 import android.util.Log
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 
 class PostFirebaseApi :PostApi {
-    private val users = mutableListOf(
-        User("1", "Gerry", "Ariella",
-            /**email = null, name = null*/ /**email = null, name = null*/),
-        User("2", "Brenton", "Capri",
-            /**email = null, name = null*/ /**email = null, name = null*/),
-        User("3", "Wally", "Claud",
-            /**email = null, name = null*/ /**email = null, name = null*/)
-    )
-    val db = FirebaseFirestore.getInstance()
 
-    private val posts = MutableStateFlow(
-        mutableListOf(
-            Post(
-                "5",
-                "The Secret of the Flowers",
-                "Improve your goldfish's physical fitness by getting him a bicycle.",
-                null,
-                1629858873, // 25/08/2021
-                users[0]
-            ),
-            Post(
-                "4",
-                "The Door's Game",
-                null,
-                "https://picsum.photos/id/85/1080/",
-                1451638679, // 01/01/2016
-                users[2]
-            ),
-            Post(
-                "1",
-                "Laughing History",
-                "He learned the important lesson that a picnic at the beach on a windy day is a bad idea.",
-                "",
-                1361696994, // 24/02/2013
-                users[0]
-            ),
-            Post(
-                "3",
-                "Woman of Years",
-                "After fighting off the alligator, Brian still had to face the anaconda.",
-                null,
-                1346601558, // 02/09/2012
-                users[0]
-            ),
-            Post(
-                "2",
-                "The Invisible Window",
-                null,
-                "https://picsum.photos/id/40/1080/",
-                1210645031, // 13/05/2008
-                users[1]
-            ),
-        )
-    )
-
-
+    private val db = FirebaseFirestore.getInstance()
 
     override fun getPostsOrderByCreationDateDesc(): Flow<List<Post>> = callbackFlow {
         val db = FirebaseFirestore.getInstance()
@@ -106,6 +52,40 @@ class PostFirebaseApi :PostApi {
             .addOnSuccessListener { Log.d("Firestore", "Message ajouté !") }
             .addOnFailureListener { e -> Log.w("Firestore", "Erreur lors de l'ajout", e) }
 
+    }
+
+    override fun addCommentToPost(postId: String, comment: String, name : String) {
+        val postsCollection = db.collection("posts")
+
+        postsCollection.whereEqualTo("id", postId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val parts = name.split(" ")
+                    val firstName = parts.getOrNull(0) ?: "Inconnu"
+                    val lastName = parts.getOrNull(1) ?: "Inconnu"
+                    val document = querySnapshot.documents[0]
+                    val documentRef = document.reference
+                    val commentList = mapOf(
+                        "comment" to comment,
+                        "firstName" to firstName,
+                        "lastName" to lastName,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+                    documentRef.update("comments", FieldValue.arrayUnion(commentList))
+                        .addOnSuccessListener {
+                            Log.d("Firestore", "Commentaire ajouté avec succès !")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("Firestore", "Erreur lors de l'ajout du commentaire : ${e.message}")
+                        }
+                } else {
+                    Log.e("Firestore", "Aucun document trouvé avec le postId : $postId")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Erreur lors de la recherche du document : ${e.message}")
+            }
     }
 
     private fun documentToPost(document: com.google.firebase.firestore.DocumentSnapshot): Post? {

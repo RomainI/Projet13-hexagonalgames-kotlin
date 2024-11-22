@@ -22,6 +22,8 @@
   <string name="text_alert_delete">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
   <string name="no_image">Aucune image sélectionnée</string>
   <string name="select_a_photo">Selectionnez une photo</string>
+  <string name="add_a_comment">Ajout d\'un commentaire</string>
+  <string name="comment">Commentaire</string>
 
 
 </resources>

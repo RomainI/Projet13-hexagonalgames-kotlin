@@ -12,9 +12,9 @@ sealed class Screen(
   
   data object Settings : Screen("settings")
 
-  data object Auth : Screen ("auth")
+  data object Detail : Screen ("detail")
 
-  data object SignIn : Screen ("signin")
+  data object Comment : Screen ("comment")
 
   data object Management : Screen ("management")
 }

@@ -22,4 +22,6 @@ interface PostApi {
    * @param post The Post object to be added.
    */
   fun addPost(post: Post)
+
+  fun addCommentToPost(postId: String, comment: String, name : String)
 }

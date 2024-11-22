@@ -34,5 +34,8 @@ class PostRepository @Inject constructor(private val postApi: PostApi) {
     postApi.addPost(post!!)
   }
 
+  fun addComment (postId: String, newComment: String, name : String) {
+    postApi.addCommentToPost(postId, newComment, name)
+  }
   
 }

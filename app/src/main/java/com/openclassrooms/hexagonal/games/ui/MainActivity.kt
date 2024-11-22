@@ -6,16 +6,20 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.auth.AuthenticationScreen
+import com.openclassrooms.hexagonal.games.screen.detail.AddCommentScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.management.AccountManagement
 import com.openclassrooms.hexagonal.games.screen.management.AccountManagementViewModel
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
+import com.openclassrooms.hexagonal.games.screen.detail.DetailScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +45,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HexagonalGamesNavHost(navHostController: NavHostController, viewModel: AccountManagementViewModel = hiltViewModel()) {
+fun HexagonalGamesNavHost(
+    navHostController: NavHostController,
+    viewModel: AccountManagementViewModel = hiltViewModel()
+) {
     NavHost(
         navController = navHostController,
         //startDestination = Screen.Auth.route
@@ -51,8 +58,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController, viewModel: Accou
         composable(route = Screen.Homefeed.route) {
             HomefeedScreen(
                 onPostClick = {
-                    //TODO
-                },
+                    navHostController.navigate("${Screen.Detail.route}/${it.id}")                },
                 onSettingsClick = {
                     navHostController.navigate(Screen.Settings.route)
                 },
@@ -64,6 +70,14 @@ fun HexagonalGamesNavHost(navHostController: NavHostController, viewModel: Accou
                 }
             )
         }
+
+        composable(
+            route = "${Screen.Detail.route}/{postId}",
+            arguments = listOf(navArgument("postId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            DetailScreen(postId = postId, onBackClick = { navHostController.navigateUp() }, onFABClick = {navHostController.navigate("${Screen.Comment.route}/$postId")})
+        }
         composable(route = Screen.Management.route) {
             if (viewModel.isUserLoggedIn()) {
                 AccountManagement(onBackClick = { navHostController.navigateUp() })
@@ -71,7 +85,13 @@ fun HexagonalGamesNavHost(navHostController: NavHostController, viewModel: Accou
                 AuthenticationScreen(onLoginAction = { navHostController.navigate(Screen.Homefeed.route) })
             }
         }
-
+        composable(
+            route = "${Screen.Comment.route}/{postId}",
+            arguments = listOf(navArgument("postId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getString("postId")
+            AddCommentScreen(postId = postId, onBackClick = { navHostController.navigateUp() })
+        }
         composable(route = Screen.AddPost.route) {
             AddScreen(
                 onBackClick = { navHostController.navigateUp() },
@@ -85,3 +105,5 @@ fun HexagonalGamesNavHost(navHostController: NavHostController, viewModel: Accou
         }
     }
 }
+
+

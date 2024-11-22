@@ -127,56 +127,12 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
         )
     }
 
-  /**  fun addPostWithImage(
-        title: String,
-        description: String,
-        imageUri: Uri,
-    ) {
-
-
-        firebaseService.uploadImageToFirebase(
-            uri = imageUri,
-            onSuccess = { imageUrl ->
-                // Appelle la fonction d'ajout de post avec l'URL de l'image
-                addPostToFirestore(title, description, imageUrl)
-            },
-            onError = { exception ->
-                onError(exception) // Gère l'erreur d'upload
-            }
-        )
-    }
-
-   fun addPostToFirestore(title: String, description: String, imageUrl: String) {
-
-        val db = FirebaseFirestore.getInstance()
-
-       /** val  user= FirebaseAuth.getInstance().currentUser
-        if (user == null) {
-            onError(Exception("Utilisateur non authentifié"))
-            return
-        }
-        val completeName = user?.displayName
-        val listNames = completeName?.split(" ") ?: listOf()
-        val firstName = listNames.firstOrNull() ?: "Inconnu"
-        val lastName = listNames.getOrNull(1) ?: "Inconnu"
-        val author = User(
-            firstname = firstName,
-            id = user.uid,
-            lastname = lastName
-        )*/
-        val post = Post(
-            title = title,
-            description = description,
-            photoUrl = imageUrl,
-            id = UUID.randomUUID().toString(),
-            author = author,
-            timestamp = System.currentTimeMillis() / 1000
-
-        )
-        db.collection("posts").add(post)
-            .addOnSuccessListener { Log.d("Firestore", "Message ajouté !") }
-            .addOnFailureListener { e -> Log.w("Firestore", "Erreur lors de l'ajout", e) }
-    }*/
+    /**
+     * Verifies mandatory fields of the post
+     * and returns a corresponding FormError if so.
+     *
+     * @return A FormError.TitleError if title is empty, null otherwise.
+     */
 
     private fun verifyPost(): FormError? {
         return if (_post.value.title.isEmpty()) {
@@ -187,12 +143,6 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
     }
 }
 
-/**
- * Verifies mandatory fields of the post
- * and returns a corresponding FormError if so.
- *
- * @return A FormError.TitleError if title is empty, null otherwise.
- */
 
 
 
