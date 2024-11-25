@@ -24,6 +24,9 @@
   <string name="select_a_photo">Selectionnez une photo</string>
   <string name="add_a_comment">Ajout d\'un commentaire</string>
   <string name="comment">Commentaire</string>
+  <string name="no_post">Aucune publication</string>
+  <string name="no_network">Pas de réseau</string>
+  <string name="user_not_connected">Un compte est nécessaire pour ajouter une publication</string>
 
 
 </resources>

@@ -24,6 +24,9 @@
   <string name="select_a_photo">Select a photo</string>
   <string name="add_a_comment">Add a comment</string>
   <string name="comment">Comment</string>
+  <string name="no_post">No post</string>
+  <string name="no_network">No network</string>
+  <string name="user_not_connected">An account is mandatory in order to add a post</string>
 
 
 

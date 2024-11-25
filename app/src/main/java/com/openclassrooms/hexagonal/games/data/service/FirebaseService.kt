@@ -24,7 +24,11 @@ class FirebaseService @Inject constructor() {
         return auth.currentUser
     }
 
-
+    fun addAuthStateListener(onAuthStateChanged: (FirebaseUser?) -> Unit) {
+        auth.addAuthStateListener { firebaseAuth ->
+            onAuthStateChanged(firebaseAuth.currentUser)
+        }
+    }
     fun uploadImageToFirebase(
         uri: Uri,
         onSuccess: (String) -> Unit,
@@ -41,7 +45,7 @@ class FirebaseService @Inject constructor() {
                 }
             }
             .addOnFailureListener { exception ->
-                onError(exception) // Retourne l'erreur si l'upload échoue
+                onError(exception)
             }
     }
 

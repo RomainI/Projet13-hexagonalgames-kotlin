@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -24,8 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,10 +42,12 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
+import com.google.api.Context
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
@@ -56,9 +61,18 @@ fun HomefeedScreen(
     onPostClick: (Post) -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onFABClick: () -> Unit = {},
-    onMyAccountClick:() -> Unit ={}
+    onMyAccountClick: () -> Unit = {}
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
+    val posts by viewModel.posts.collectAsStateWithLifecycle()
+    val isConnected by viewModel.isConnected.collectAsState()
+    val context = LocalContext.current
+    val isUserConnected by viewModel.isUserConnected.collectAsState()
+    val userNotConnected = R.string.user_not_connected
+
+    var wasConnected by remember { mutableStateOf(isConnected) }
+    var previousPosts by remember { mutableStateOf(posts) }
+
 
     Scaffold(
         modifier = modifier,
@@ -106,7 +120,11 @@ fun HomefeedScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    onFABClick()
+                    if (isUserConnected) {
+                        onFABClick()
+                    }else {
+                        Toast.makeText(context, userNotConnected, Toast.LENGTH_SHORT).show()
+                    }
                 }
             ) {
                 Icon(
@@ -116,13 +134,21 @@ fun HomefeedScreen(
             }
         }
     ) { contentPadding ->
-        val posts by viewModel.posts.collectAsStateWithLifecycle()
 
         HomefeedList(
             modifier = modifier.padding(contentPadding),
             posts = posts,
             onPostClick = onPostClick
         )
+        if (!isConnected && wasConnected) {
+            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+        }
+        wasConnected = isConnected
+
+        if (posts.isEmpty() && previousPosts.isNotEmpty() && isConnected) {
+            Toast.makeText(context, stringResource(R.string.no_post), Toast.LENGTH_SHORT).show()
+        }
+        previousPosts = posts
     }
 }
 
@@ -132,10 +158,12 @@ private fun HomefeedList(
     posts: List<Post>,
     onPostClick: (Post) -> Unit,
 ) {
+
     LazyColumn(
         modifier = modifier.padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+
         items(posts) { post ->
             HomefeedCell(
                 post = post,
@@ -213,7 +241,7 @@ private fun HomefeedCellPreview() {
                     firstname = "firstname",
                     lastname = "lastname",
 
-                )
+                    )
             ),
             onPostClick = {}
         )
@@ -237,7 +265,7 @@ private fun HomefeedCellImagePreview() {
                     firstname = "firstname",
                     lastname = "lastname",
 
-                )
+                    )
             ),
             onPostClick = {}
         )
