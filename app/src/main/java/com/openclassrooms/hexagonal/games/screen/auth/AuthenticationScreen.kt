@@ -42,26 +42,26 @@ import kotlin.math.log
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.screen.Screen
 
-
+/**
+ * Authentication screen providing Firebase Auth UI
+ * @param onLoginAction A lambda function triggered after successful login.
+ */
 @Composable
-fun AuthenticationScreen(modifier: Modifier = Modifier,
+fun AuthenticationScreen(
                          onLoginAction: () -> Unit) {
     val context = LocalContext.current
     var user by remember { mutableStateOf<FirebaseUser?>(null) }
 
-    // Launcher to start the Firebase Auth UI
     val authLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Authentication succeeded
             onLoginAction()
         } else {
             //TODO POPUP with error message
         }
     }
 
-    // Function to start Firebase Auth UI
     fun launchAuthUi() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()

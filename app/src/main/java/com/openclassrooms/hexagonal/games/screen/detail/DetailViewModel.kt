@@ -7,7 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-
+/**
+ * This ViewModel manages data and interactions related to display posts in the DetailScreen.
+ * It utilizes dependency injection to retrieve a PostRepository instance for interacting with post data.
+ */
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val postRepository: PostRepository

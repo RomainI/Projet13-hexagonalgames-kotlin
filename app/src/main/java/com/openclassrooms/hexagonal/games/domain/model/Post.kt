@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.domain.model
 
-import android.net.Uri
 import java.io.Serializable
 
 /**
@@ -38,6 +37,12 @@ data class Post(
   /**
    * User object representing the author of the Post.
    */
-  val author: User?
+  val author: User?,
+
+  /**
+   * List of comments associated with the Post.
+   * Defaults to an empty list if no comments are provided.
+   */
+  val comments: List<Comment> = emptyList()
 ) : Serializable
 

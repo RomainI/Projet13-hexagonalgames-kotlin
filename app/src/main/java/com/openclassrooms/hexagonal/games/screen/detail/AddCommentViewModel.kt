@@ -8,6 +8,8 @@ import com.openclassrooms.hexagonal.games.data.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+
+
 @HiltViewModel
 class AddCommentViewModel @Inject constructor(private val postRepository: PostRepository, private val firebaseRepository: FirebaseRepository) : ViewModel() {
 

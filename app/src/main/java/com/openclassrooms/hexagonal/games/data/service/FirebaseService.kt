@@ -15,15 +15,6 @@ class FirebaseService @Inject constructor() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    suspend fun signInWithEmail(email: String, password: String): FirebaseUser? {
-        return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
-            result.user
-        } catch (e: Exception) {
-            // Gestion des erreurs
-            null
-        }
-    }
 
     fun signOut() {
         auth.signOut()
@@ -33,23 +24,6 @@ class FirebaseService @Inject constructor() {
         return auth.currentUser
     }
 
-    suspend fun saveUser(user: User): Boolean {
-        return try {
-            firestore.collection("users").document(user.id).set(user).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    suspend fun getUser(userId: String): User? {
-        return try {
-            val document: DocumentSnapshot = firestore.collection("users").document(userId).get().await()
-            document.toObject(User::class.java)
-        } catch (e: Exception) {
-            null
-        }
-    }
 
     fun uploadImageToFirebase(
         uri: Uri,

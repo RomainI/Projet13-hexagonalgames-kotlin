@@ -4,11 +4,18 @@ import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+
+
+/**
+ * Class to interact with Firebase Firestore for managing Posts and Comments.
+ * Implements PostApi interface
+ */
 
 class PostFirebaseApi :PostApi {
 
@@ -105,13 +112,30 @@ class PostFirebaseApi :PostApi {
                 )
             }
 
+            val comments = (document.get("comments") as? List<*>)?.mapNotNull { commentEntry ->
+                (commentEntry as? Map<*, *>)?.let { commentMap ->
+                    try {
+                        Comment(
+                            content = commentMap["comment"] as? String ?: return@mapNotNull null,
+                            commentFirstName = commentMap["firstName"] as? String ?: return@mapNotNull null,
+                            commentLastName = commentMap["lastName"] as? String ?: return@mapNotNull null,
+                            timestamp = (commentMap["timestamp"] as? Long) ?: return@mapNotNull null
+                        )
+                    } catch (e: Exception) {
+                        Log.e("PostFirebaseApi", "Erreur lors du mapping d'un commentaire : ${e.message}")
+                        null
+                    }
+                }
+            } ?: emptyList()
+
             Post(
                 id = id,
                 title = title,
                 description = description,
                 photoUrl = photoUrl,
                 timestamp = timestamp,
-                author = author
+                author = author,
+                comments = comments
             )
         } catch (e: Exception) {
             Log.e("PostFirebaseApi", "Erreur lors du mapping : ${e.message}")

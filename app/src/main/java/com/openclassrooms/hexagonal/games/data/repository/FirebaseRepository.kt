@@ -4,11 +4,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.hexagonal.games.data.service.FirebaseService
 import javax.inject.Inject
 
-class FirebaseRepository @Inject constructor (private val firebaseService: FirebaseService) {
+/**
+ * Repository class to manage user-related Firebase operations.
+ *
+ * @param firebaseService The Firebase service used to perform user-related operations.
+ */
 
-    suspend fun getFirebaseUserWithSignInWithEmail(email : String, password : String): FirebaseUser?{
-        return firebaseService.signInWithEmail(email,password)
-    }
+class FirebaseRepository @Inject constructor (private val firebaseService: FirebaseService) {
 
     fun logOut(){
         firebaseService.signOut()

@@ -1,10 +1,13 @@
 package com.openclassrooms.hexagonal.games.screen.detail
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -33,7 +36,7 @@ import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.util.DebugLogger
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.domain.model.Post
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +59,7 @@ fun DetailScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text( post.title)
+                        Text(post.title)
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -129,7 +132,27 @@ fun DetailScreen(
                     )
                 }
 
+
+                LazyColumn(
+                    modifier = Modifier.padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    val comments = post.comments
+                    items(comments) { comment ->
+                        Text(
+                            text = stringResource(
+                                id = R.string.by, comment.commentFirstName, comment.commentLastName
+                            ),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            text = comment.content,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
             }
+
         }
 
     } else {

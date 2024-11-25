@@ -49,6 +49,19 @@ import coil.compose.rememberAsyncImagePainter
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
+
+/**
+ * The AddScreen  provides a Screen to create a new post.
+ * It includes text fields for the post title and description,
+ * an image picker, and buttons to save or go back.
+ *
+ * @param modifier Modifier for customizing the composable layout.
+ * @param viewModel ViewModel instance for managing the form state and actions.
+ * @param onBackClick Lambda triggered when the back button is clicked.
+ * @param onSaveClick Lambda triggered when the save button is clicked.
+ */
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(
@@ -92,7 +105,6 @@ fun AddScreen(
                     viewModel.onAction(FormEvent.ImageChanges(imageUri))
                     onSaveClick()
                 } else {
-                    // Affiche une erreur si aucune image n'est sélectionnée
                     println("Erreur : aucune image sélectionnée")
                     onSaveClick()
                 }
@@ -108,13 +120,11 @@ private fun CreatePost(
     onTitleChanged: (String) -> Unit,
     description: String,
     onDescriptionChanged: (String) -> Unit,
-//    onImageChanged: (Uri?) -> Unit,
     onSaveClicked: (Uri?) -> Unit,
     error: FormError?
 ) {
     val scrollState = rememberScrollState()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val context = LocalContext.current
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -161,10 +171,8 @@ private fun CreatePost(
             )
         }
 
-        // Image Preview
         Spacer(modifier = Modifier.height(16.dp))
         if (selectedImageUri != null) {
-//            onImageChanged(selectedImageUri)
             Image(
                 painter = rememberAsyncImagePainter(selectedImageUri),
                 contentDescription = null,

@@ -59,7 +59,6 @@ fun HomefeedScreen(
     onMyAccountClick:() -> Unit ={}
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
-    val navController = rememberNavController()
 
     Scaffold(
         modifier = modifier,
@@ -213,8 +212,7 @@ private fun HomefeedCellPreview() {
                     id = "1",
                     firstname = "firstname",
                     lastname = "lastname",
-//                    email = null,
-//                    name = null,
+
                 )
             ),
             onPostClick = {}
@@ -238,8 +236,7 @@ private fun HomefeedCellImagePreview() {
                     id = "1",
                     firstname = "firstname",
                     lastname = "lastname",
-//                    email = null,
-//                    name = null,
+
                 )
             ),
             onPostClick = {}

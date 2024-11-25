@@ -16,19 +16,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.screen.ad.AddViewModel
-import com.openclassrooms.hexagonal.games.screen.ad.FormError
-import com.openclassrooms.hexagonal.games.screen.ad.FormEvent
 
+/**
+ * A Screen for adding a comment to a specific post.
+ *
+ * @param onBackClick A lambda triggered when the back button is clicked.
+ * @param postId The ID of the post to which the comment will be added.
+ * @param viewModel The ViewModel managing the comment state and actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCommentScreen(onBackClick: () -> Unit,

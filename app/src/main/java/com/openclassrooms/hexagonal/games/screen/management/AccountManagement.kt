@@ -65,23 +65,7 @@ fun AccountManagement(
             )
         }
     ) { contentPadding ->
-        /**MyAccount(
-            modifier = Modifier.padding(contentPadding),
-            onDeleteButtonClicked = {
-                //TODO POPUP
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    async {
-                        viewModel.deleteUser()
-                    }.await()
-                }
-                onBackClick()
-            },
-            onSignOutButtonClicked = {
-                viewModel.logOut()
-                onBackClick()
-            },
-        )*/
 
         MyAccount(
             modifier = Modifier.padding(contentPadding),
