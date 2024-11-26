@@ -27,6 +27,7 @@
   <string name="no_post">Aucune publication</string>
   <string name="no_network">Pas de réseau</string>
   <string name="user_not_connected">Un compte est nécessaire pour ajouter une publication</string>
+  <string name="invalid_photo">Photo non valide</string>
 
 
 </resources>

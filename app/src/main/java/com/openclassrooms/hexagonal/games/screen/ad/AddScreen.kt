@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,6 +72,10 @@ fun AddScreen(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val isConnected by viewModel.isConnected.collectAsState()
+    var wasConnected by remember { mutableStateOf(isConnected) }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -92,7 +98,7 @@ fun AddScreen(
     ) { contentPadding ->
         val post by viewModel.post.collectAsStateWithLifecycle()
         val error by viewModel.error.collectAsStateWithLifecycle()
-
+        val noImageSelected = stringResource(R.string.invalid_photo)
         CreatePost(
             modifier = Modifier.padding(contentPadding),
             error = error,
@@ -105,11 +111,15 @@ fun AddScreen(
                     viewModel.onAction(FormEvent.ImageChanges(imageUri))
                     onSaveClick()
                 } else {
-                    println("Erreur : aucune image sélectionnée")
+                    Toast.makeText(context, noImageSelected, Toast.LENGTH_SHORT).show()
                     onSaveClick()
                 }
             }
         )
+        if (!isConnected && wasConnected) {
+            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+        }
+        wasConnected = isConnected
     }
 }
 

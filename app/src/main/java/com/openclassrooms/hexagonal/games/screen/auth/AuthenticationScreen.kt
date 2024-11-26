@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -21,7 +22,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.*
@@ -40,15 +43,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlin.math.log
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.screen.Screen
 
 /**
  * Authentication screen providing Firebase Auth UI
  * @param onLoginAction A lambda function triggered after successful login.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthenticationScreen(
-                         onLoginAction: () -> Unit) {
+    onLoginAction: () -> Unit,
+    onBackClick: () -> Unit
+) {
     val context = LocalContext.current
     var user by remember { mutableStateOf<FirebaseUser?>(null) }
 
@@ -57,8 +62,6 @@ fun AuthenticationScreen(
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             onLoginAction()
-        } else {
-            //TODO POPUP with error message
         }
     }
 
@@ -75,26 +78,45 @@ fun AuthenticationScreen(
 
     }
 
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(id = R.string.sign_in))
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        onBackClick()
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.contentDescription_go_back)
+                        )
+                    }
+                }
+            )
+        },
+    ) { contentPadding ->
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (user == null) {
-            Button(onClick = { launchAuthUi() }) {
-                Text(text = stringResource(id= R.string.sign_in))
-            }
-        } else {
-            Text(text = "Welcome, ${user?.displayName ?: "User"}")
-            Button(onClick = {
-                AuthUI.getInstance().signOut(context)
-                user = null
-            }) {
-                Text("Sign out")
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (user == null) {
+                Button(onClick = { launchAuthUi() }) {
+                    Text(text = stringResource(id = R.string.sign_in))
+                }
+            } else {
+                Text(text = "Welcome, ${user?.displayName ?: "User"}")
+                Button(onClick = {
+                    AuthUI.getInstance().signOut(context)
+                    user = null
+                }) {
+                    Text("Sign out")
+                }
             }
         }
     }

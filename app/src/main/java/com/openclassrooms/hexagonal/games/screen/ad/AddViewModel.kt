@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,13 +12,16 @@ import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.service.FirebaseService
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.utils.ConnectivityUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.plugins.RxJavaPlugins.onError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -26,7 +30,10 @@ import javax.inject.Inject
  * It utilizes dependency injection to retrieve a PostRepository instance for interacting with post data.
  */
 @HiltViewModel
-class AddViewModel @Inject constructor(private val postRepository: PostRepository, private val firebaseService: FirebaseService) : ViewModel() {
+class AddViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
+    private val postRepository: PostRepository, private val firebaseService: FirebaseService
+) : ViewModel() {
 
     /**
      * Internal mutable state flow representing the current post being edited.
@@ -41,6 +48,17 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
             author = null,
         )
     )
+
+    private val _isConnected = MutableStateFlow(false)
+    val isConnected: StateFlow<Boolean> = _isConnected
+
+    init {
+        viewModelScope.launch {
+            ConnectivityUtils.observeNetworkState(appContext).collect { isConnected ->
+                _isConnected.value = isConnected
+            }
+        }
+    }
 
     /**
      * Public state flow representing the current post being edited.
@@ -103,7 +121,7 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
      * TODO: Implement logic to retrieve the current user.
      */
     fun addPost() {
-        val  user= FirebaseAuth.getInstance().currentUser
+        val user = FirebaseAuth.getInstance().currentUser
         if (user == null) {
             onError(Exception("Utilisateur non authentifié"))
             return

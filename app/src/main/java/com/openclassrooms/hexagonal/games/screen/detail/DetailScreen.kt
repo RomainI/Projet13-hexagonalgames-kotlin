@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -22,7 +23,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
@@ -47,8 +52,13 @@ fun DetailScreen(
     postId: String?,
 
     ) {
+    val context = LocalContext.current
+    val userNotConnected = R.string.user_not_connected
+
+    val isConnected by viewModel.isConnected.collectAsState()
+    var wasConnected by remember { mutableStateOf(isConnected) }
     if (postId == null) {
-        Text(text = "Erreur : ID du post manquant")
+        Text(text = "Error")
         return
     }
 
@@ -77,7 +87,11 @@ fun DetailScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        onFABClick()
+                        if (viewModel.isUserConnected.value) {
+                            onFABClick()
+                        } else {
+                            Toast.makeText(context, userNotConnected, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 ) {
                     Icon(
@@ -158,4 +172,9 @@ fun DetailScreen(
     } else {
         Text(text = "Loading")
     }
+    if (!isConnected && wasConnected) {
+        Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+    }
+    wasConnected = isConnected
+
 }

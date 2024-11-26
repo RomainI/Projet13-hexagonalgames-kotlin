@@ -27,6 +27,7 @@
   <string name="no_post">No post</string>
   <string name="no_network">No network</string>
   <string name="user_not_connected">An account is mandatory in order to add a post</string>
+  <string name="invalid_photo">Invalid photo</string>
 
 
 

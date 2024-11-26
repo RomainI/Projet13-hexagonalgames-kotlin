@@ -82,7 +82,7 @@ fun HexagonalGamesNavHost(
             if (viewModel.isUserLoggedIn()) {
                 AccountManagement(onBackClick = { navHostController.navigateUp() })
             } else {
-                AuthenticationScreen(onLoginAction = { navHostController.navigate(Screen.Homefeed.route) })
+                AuthenticationScreen(onLoginAction = { navHostController.navigate(Screen.Homefeed.route) }, onBackClick = {navHostController.navigateUp()})
             }
         }
         composable(
