@@ -65,12 +65,12 @@ fun HomefeedScreen(
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
     val posts by viewModel.posts.collectAsStateWithLifecycle()
-    val isConnected by viewModel.isConnected.collectAsState()
+//    val isConnected by viewModel.isConnected.collectAsState()
     val context = LocalContext.current
     val isUserConnected by viewModel.isUserConnected.collectAsState()
     val userNotConnected = R.string.user_not_connected
 
-    var wasConnected by remember { mutableStateOf(isConnected) }
+//    var wasConnected by remember { mutableStateOf(isConnected) }
     var previousPosts by remember { mutableStateOf(posts) }
 
 
@@ -140,12 +140,12 @@ fun HomefeedScreen(
             posts = posts,
             onPostClick = onPostClick
         )
-        if (!isConnected && wasConnected) {
-            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
-        }
-        wasConnected = isConnected
+//        if (!isConnected && wasConnected) {
+//            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+//        }
+//        wasConnected = isConnected
 
-        if (posts.isEmpty() && previousPosts.isNotEmpty() && isConnected) {
+        if (posts.isEmpty() && previousPosts.isNotEmpty() ) {
             Toast.makeText(context, stringResource(R.string.no_post), Toast.LENGTH_SHORT).show()
         }
         previousPosts = posts

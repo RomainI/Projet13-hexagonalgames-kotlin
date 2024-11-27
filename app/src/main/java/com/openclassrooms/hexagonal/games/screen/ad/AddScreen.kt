@@ -73,8 +73,8 @@ fun AddScreen(
     onSaveClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val isConnected by viewModel.isConnected.collectAsState()
-    var wasConnected by remember { mutableStateOf(isConnected) }
+//    val isConnected by viewModel.isConnected.collectAsState()
+//    var wasConnected by remember { mutableStateOf(isConnected) }
 
     Scaffold(
         modifier = modifier,
@@ -116,10 +116,10 @@ fun AddScreen(
                 }
             }
         )
-        if (!isConnected && wasConnected) {
-            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
-        }
-        wasConnected = isConnected
+//        if (!isConnected && wasConnected) {
+//            Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+//        }
+//        wasConnected = isConnected
     }
 }
 

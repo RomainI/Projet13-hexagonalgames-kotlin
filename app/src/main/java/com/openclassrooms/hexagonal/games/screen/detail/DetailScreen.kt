@@ -55,8 +55,8 @@ fun DetailScreen(
     val context = LocalContext.current
     val userNotConnected = R.string.user_not_connected
 
-    val isConnected by viewModel.isConnected.collectAsState()
-    var wasConnected by remember { mutableStateOf(isConnected) }
+//    val isConnected by viewModel.isConnected.collectAsState()
+//    var wasConnected by remember { mutableStateOf(isConnected) }
     if (postId == null) {
         Text(text = "Error")
         return
@@ -172,9 +172,9 @@ fun DetailScreen(
     } else {
         Text(text = "Loading")
     }
-    if (!isConnected && wasConnected) {
-        Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
-    }
-    wasConnected = isConnected
+//    if (!isConnected && wasConnected) {
+//        Toast.makeText(context, stringResource(R.string.no_network), Toast.LENGTH_SHORT).show()
+//    }
+//    wasConnected = isConnected
 
 }

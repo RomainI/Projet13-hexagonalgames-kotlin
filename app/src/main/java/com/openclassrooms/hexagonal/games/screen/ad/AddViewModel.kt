@@ -1,18 +1,14 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.service.FirebaseService
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
-import com.openclassrooms.hexagonal.games.utils.ConnectivityUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.reactivex.rxjava3.plugins.RxJavaPlugins.onError
@@ -22,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -31,16 +26,19 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AddViewModel @Inject constructor(
-    @ApplicationContext private val appContext: Context,
-    private val postRepository: PostRepository, private val firebaseService: FirebaseService
-) : ViewModel() {
+//    @ApplicationContext private val appContext: Context,
+    private val postRepository: PostRepository,
+    private val firebaseService: FirebaseService,
+
+
+    ) : ViewModel() {
 
     /**
      * Internal mutable state flow representing the current post being edited.
      */
     private var _post = MutableStateFlow(
         Post(
-            id = UUID.randomUUID().toString(),
+            id = System.currentTimeMillis().toString(),
             title = "",
             description = "",
             photoUrl = null,
@@ -48,17 +46,20 @@ class AddViewModel @Inject constructor(
             author = null,
         )
     )
+    private val _isPostError = MutableStateFlow(false)
+    val isPostError: StateFlow<Boolean> = _isPostError
 
-    private val _isConnected = MutableStateFlow(false)
-    val isConnected: StateFlow<Boolean> = _isConnected
 
-    init {
-        viewModelScope.launch {
-            ConnectivityUtils.observeNetworkState(appContext).collect { isConnected ->
-                _isConnected.value = isConnected
-            }
-        }
-    }
+//    private val _isConnected = MutableStateFlow(false)
+//    val isConnected: StateFlow<Boolean> = _isConnected
+
+//    init {
+//        viewModelScope.launch {
+//            NetworkUtils.observeNetworkState(appContext).collect { isConnected ->
+//                _isConnected.value = isConnected
+//            }
+//        }
+//    }
 
     /**
      * Public state flow representing the current post being edited.
@@ -104,7 +105,6 @@ class AddViewModel @Inject constructor(
                         _post.value = _post.value.copy(
                             photoUrl = imageUrl
                         )
-                        Log.d("photo URL", imageUrl)
                         addPost()
                     },
                     onError = { exception ->
@@ -135,13 +135,23 @@ class AddViewModel @Inject constructor(
             id = user.uid,
             lastname = lastName
         )
-
-
-        postRepository.addPost(
-            _post.value.copy(
-                author = author
+        viewModelScope.launch {
+            val result = postRepository.addPost(
+                _post.value.copy(
+                    author = author
+                )
             )
-        )
+            result.onSuccess {
+                _isPostError.value = false
+            }.onFailure { exception ->
+                _isPostError.value = true
+            }
+//            postRepository.addPost(
+//                _post.value.copy(
+//                    author = author
+//                )
+//            )
+        }
     }
 
     /**
@@ -151,11 +161,13 @@ class AddViewModel @Inject constructor(
      * @return A FormError.TitleError if title is empty, null otherwise.
      */
 
-    private fun verifyPost(): FormError? {
-        return if (_post.value.title.isEmpty()) {
-            FormError.TitleError
-        } else {
-            null
+    fun verifyPost(): FormError? {
+        val currentPost = _post.value
+        return when {
+            currentPost.title.isEmpty() -> FormError.TitleError
+            currentPost.description?.isEmpty() == true -> FormError.DescriptionError
+            currentPost.photoUrl.isNullOrEmpty() -> FormError.ImageError
+            else -> null
         }
     }
 }

@@ -10,6 +10,7 @@ import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 
 /**
@@ -51,14 +52,13 @@ class PostFirebaseApi :PostApi {
         awaitClose { subscription.remove() }
     }
 
-    override fun addPost(post: Post) {
-
-
-
-        db.collection("posts").add(post)
-            .addOnSuccessListener { Log.d("Firestore", "Message ajouté !") }
-            .addOnFailureListener { e -> Log.w("Firestore", "Erreur lors de l'ajout", e) }
-
+    override fun addPost(post: Post) : Result<Unit> {
+        return try {
+            db.collection("posts").add(post)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override fun addCommentToPost(postId: String, comment: String, name : String) {

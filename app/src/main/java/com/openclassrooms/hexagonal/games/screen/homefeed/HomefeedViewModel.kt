@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.service.FirebaseService
 import com.openclassrooms.hexagonal.games.domain.model.Post
-import com.openclassrooms.hexagonal.games.utils.ConnectivityUtils
+import com.openclassrooms.hexagonal.games.NetworkUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,8 +28,8 @@ class HomefeedViewModel @Inject constructor(
     ViewModel() {
 
     private val _posts: MutableStateFlow<List<Post>> = MutableStateFlow(emptyList())
-    private val _isConnected = MutableStateFlow(false)
-    val isConnected: StateFlow<Boolean> = _isConnected
+//    private val _isConnected = MutableStateFlow(false)
+//    val isConnected: StateFlow<Boolean> = _isConnected
 
     private val _isUserConnected = MutableStateFlow(false)
     val isUserConnected: StateFlow<Boolean> = _isUserConnected
@@ -48,11 +48,11 @@ class HomefeedViewModel @Inject constructor(
                 _posts.value = posts
             }
         }
-        viewModelScope.launch {
-            ConnectivityUtils.observeNetworkState(appContext).collect { isConnected ->
-                _isConnected.value = isConnected
-            }
-        }
+//        viewModelScope.launch {
+//            NetworkUtils.observeNetworkState(appContext).collect { isConnected ->
+//                _isConnected.value = isConnected
+//            }
+//        }
         viewModelScope.launch {
             firebaseService.addAuthStateListener { user ->
                 _isUserConnected.value = user != null

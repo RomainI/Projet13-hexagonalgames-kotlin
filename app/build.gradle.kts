@@ -1,9 +1,9 @@
 plugins {
   alias(libs.plugins.androidApplication)
   alias(libs.plugins.kotlin)
-  alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
   id("com.google.gms.google-services")
+  kotlin("kapt")
 }
 
 android {
@@ -26,32 +26,48 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
+
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.11"
-  }
+
   kotlinOptions {
     jvmTarget = "1.8"
   }
+
   buildFeatures {
     compose = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = "1.5.11"
   }
 }
 
 dependencies {
-  //kotlin
+  // Kotlin
   implementation(platform(libs.kotlin.bom))
 
-  //DI
+  // Dependency Injection
   implementation(libs.hilt)
-  implementation(libs.firebase.firestore.ktx)
-  ksp(libs.hilt.compiler)
+  kapt(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
+  testImplementation(libs.hilt.android.testing)
+  androidTestImplementation(libs.hilt.android.testing)
+  kaptAndroidTest(libs.hilt.compiler)
 
-  //compose
+  // Firebase
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.firestore)
+  implementation(libs.firebase.firestore.ktx)
+  implementation(libs.firebase.messaging)
+  implementation(libs.firebase.ui.auth.v802)
+  implementation(libs.firebase.ui.storage)
+  implementation(libs.firebase.ui.firestore)
+
+  // Compose
   implementation(platform(libs.compose.bom))
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.graphics)
@@ -61,26 +77,29 @@ dependencies {
   implementation(libs.lifecycle.runtime.compose)
   debugImplementation(libs.compose.ui.tooling)
   debugImplementation(libs.compose.ui.test.manifest)
-
   implementation(libs.activity.compose)
   implementation(libs.navigation.compose)
-  
-  implementation(libs.kotlinx.coroutines.android)
-  
+
+  // Image Loading and Permissions
   implementation(libs.coil.compose)
   implementation(libs.accompanist.permissions)
 
+  // Coroutines
+  implementation(libs.kotlinx.coroutines.android)
+  testImplementation(libs.kotlinx.coroutines.test)
+
+  // Unit Tests
   testImplementation(libs.junit)
+  testImplementation(libs.mockk)
+  testImplementation(libs.slf4j.simple)
+
+  // Android Tests
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+}
 
-  implementation(libs.firebase.bom)
-  implementation(libs.firebase.analytics)
-  implementation (libs.firebase.ui.auth.v802)
-  implementation (libs.firebase.messaging)
-  implementation(libs.firebase.firestore)
-  implementation ("androidx.compose.material:material-icons-extended:1.7.5")
-
-  implementation(libs.firebase.ui.storage)
-  implementation(libs.firebase.ui.firestore)
+kapt {
+  arguments {
+    arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
+  }
 }
