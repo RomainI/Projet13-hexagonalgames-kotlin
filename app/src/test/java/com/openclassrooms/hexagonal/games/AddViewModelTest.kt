@@ -73,7 +73,7 @@ class AddViewModelTest {
 
         assert(viewModel.verifyPost() is FormError.TitleError)
     }
-    
+
 
 
 }
